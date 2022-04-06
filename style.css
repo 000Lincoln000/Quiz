@@ -1,0 +1,10 @@
+input.btn {
+  height: 4rem;
+}
+
+@media (max-width: 500px) {
+  input.btn {
+    width: 500px;
+    font-size: 11px;
+  }
+}
