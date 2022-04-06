@@ -23,7 +23,8 @@ const userAnswers = []
 const optionsArray = []
 
 let score = 0
-let counter = 2
+let counter = 0
+let counter2 = 2
 
 //Adiciona todas opções no array optionsArray
 const allInputs = (_, index) => {
@@ -38,14 +39,14 @@ const setCheckedAndRemove = event => {
   userAnswers.push(event.target.value)
   optionsArray.forEach(itHasChecked)
   questionDivs.forEach(element => {
-    if (element.classList.contains(`questionText${counter}`)) {
+    if (element.classList.contains(`questionText${counter2}`)) {
       element.classList.remove("d-none")
     }
   })
-  if (counter === 11) {
+  if (counter2 === 11) {
     submitButton.classList.remove("d-none")
   }
-  counter++
+  counter2++
 }
 
 const itHasChecked = item => {
