@@ -7,46 +7,38 @@ const submitButton = document.querySelector(".submitButton")
 const reloadButton = document.querySelector(".reloadButton")
 
 const modalClassCloseItens = ["simbol-modal-close", "btn-modal-close", "modal"]
-const correctAnswers = [
-  "Um milhão",
-  "Austrália",
-  "Quatro pares",
-  "Tempo indeterminado",
-  "Nilo, Amazonas, Mississipi",
-  "Entre 4,8 e 5,5 metros",
-  "Meteorologia",
-  "Oito",
-  "Caracóis, caranguejos e lagostas",
-  "Baleia azul e golfinhos",
-]
+
 const userAnswers = []
 const optionsArray = []
 
 let score = 0
-let counter = 0
-let counter2 = 2
+let scoreCounter = 0
+let divQuestionNumber = 2
 
-//Adiciona todas opções no array optionsArray
-const allInputs = (_, index) => {
-  form[`question${index + 1}`].forEach(item => {
-    optionsArray.push(item)
-  })
+const allInputs = div => {
+  const verifyIfItsAQuestion = element => {
+    const isItAnInput = element.tagName === "INPUT"
+    if (isItAnInput) {
+      optionsArray.push(element)
+    }
+  }
+  Array.from(div.children).forEach(verifyIfItsAQuestion)
 }
-const pushElementsIntoArray = correctAnswers.forEach(allInputs)
+const pushElementsIntoArray2 = questionDivs.forEach(allInputs)
 
 const setCheckedAndRemove = event => {
   event.target.setAttribute("checked", "s")
-  userAnswers.push(event.target.value)
+  userAnswers.push(event.target.dataset.answer)
   optionsArray.forEach(itHasChecked)
   questionDivs.forEach(element => {
-    if (element.classList.contains(`questionText${counter2}`)) {
+    if (element.classList.contains(`questionText${divQuestionNumber}`)) {
       element.classList.remove("d-none")
     }
   })
-  if (counter2 === 11) {
+  if (divQuestionNumber === 11) {
     submitButton.classList.remove("d-none")
   }
-  counter2++
+  divQuestionNumber++
 }
 
 const itHasChecked = item => {
@@ -60,17 +52,17 @@ const itHasChecked = item => {
 
 const verifyAnswers = event => {
   const animateScore = () => {
-    if (counter === score) {
+    if (scoreCounter === score) {
       clearInterval(timer)
     }
-    scoreText.textContent = `${counter}%`
-    counter++
+    scoreText.textContent = `${scoreCounter}%`
+    scoreCounter++
   }
   const disableSubmitButton = () => {
     submitButton.setAttribute("disabled", "")
   }
   event.preventDefault()
-  correctAnswers.forEach(addingScore)
+  userAnswers.forEach(addingScore)
   questionDivs.forEach(colorAwnsers)
   const timer = setInterval(animateScore, 20)
 
@@ -87,19 +79,19 @@ const verifyAnswers = event => {
   reloadButton.classList.remove("d-none")
 }
 
-const addingScore = (_, index) => {
-  if (correctAnswers[index] === userAnswers[index]) {
+const addingScore = userAnswer => {
+  if (userAnswer === "right") {
     score += 10
   }
 }
 
-const colorAwnsers = (div, index) => {
-  Array.from(div.children).forEach(element => {
+const colorAwnsers = (_, index) => {
+  const colorRightAndWrong = element => {
     const correctAnswer =
-      element.value === correctAnswers[index] &&
+      element.dataset.answer === "right" &&
       element.getAttribute("name") === `question${index + 1}`
 
-    const wrongAnswer = element.tagName === "INPUT"
+    const wrongAnswer = element.dataset.answer === "wrong"
 
     if (correctAnswer) {
       element.classList.remove("btn-primary")
@@ -108,7 +100,8 @@ const colorAwnsers = (div, index) => {
       element.classList.remove("btn-primary")
       element.classList.add("btn-danger")
     }
-  })
+  }
+  optionsArray.forEach(colorRightAndWrong)
 }
 
 const showHidePopUp = event => {
